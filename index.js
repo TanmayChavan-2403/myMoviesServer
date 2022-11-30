@@ -8,6 +8,10 @@ app.use(express.json());
 
 const api_key = process.env.API_KEY;
 
+app.get('/', (req, res) => {
+    res.json({status: "Server is up and running 😀"}).end();
+})
+
 app.get('/search', (req, res) => {
     const movie_name = req.body.movie_name.split(" ").join("+");
     const url = `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${movie_name}`;

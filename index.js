@@ -1,10 +1,13 @@
 const express = require('express');
 require('dotenv').config();
 const axios = require('axios');
+var cors = require('cors');
 const genre_object = require('./utilityFunctions');
+
 
 app = express();
 app.use(express.json());
+app.use(cors());
 
 const api_key = process.env.API_KEY;
 
@@ -12,7 +15,7 @@ app.get('/', (req, res) => {
     res.json({status: "Server is up and running 😀"}).end();
 })
 
-app.get('/search', (req, res) => {
+app.post('/search', (req, res) => {
     const movie_name = req.body.movie_name.split(" ").join("+");
     const url = `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${movie_name}`;
     axios.get(url, {
@@ -47,7 +50,7 @@ app.get('/search', (req, res) => {
 
 })
 
-app.get('/searchByGenre', (req, res) => {
+app.post('/searchByGenre', (req, res) => {
     const pageNumber = req.body.pageNumber;
     url = `https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&with_genres=878&page=${pageNumber}`;
     axios.get(url, {

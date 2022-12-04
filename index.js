@@ -51,8 +51,8 @@ app.post('/search', (req, res) => {
 })
 
 app.post('/searchByGenre', (req, res) => {
-    const pageNumber = req.body.pageNumber;
-    url = `https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&with_genres=878&page=${pageNumber}`;
+    const genId = req.body.genId;
+    url = `https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&with_genres=${genId}&page=1`;
     axios.get(url, {
         headers:{
             'Authorization': `Bearer ${process.env.API_READ_ACCESS_TOKEN}`,

@@ -1,8 +1,10 @@
 const express = require('express');
 require('dotenv').config();
 const axios = require('axios');
+const mongoose = require('mongoose');
 var cors = require('cors');
 const genre_object = require('./utilityFunctions');
+const User = require('./userModel');
 
 
 app = express();
@@ -81,6 +83,37 @@ app.post('/searchByGenre', (req, res) => {
     .catch(err => res.json(err).end());
 })
 
-app.listen(process.env.PORT, () => {
-    console.log(`Listening on port ${process.env.PORT}`)
+app.post('/login', async(req, res) => {
+    const username = req.body.uid;
+    const password = req.body.upass;
+    const email = req.body.uemail;
+    try {
+        const user = await User.login(username, password, email);
+        res.status(200).json({status: true}).end();
+    } catch (error) {
+        res.status(403).json({status: false}).end();
+    }
 })
+
+app.post('/signup', async (req, res) => {
+    const username = req.body.uid;
+    const password = req.body.upass;
+    const email = req.body.uemail;
+    try {
+        const user = await User.create({username, password, email})
+        res.json({status: true}).end();
+    } catch (error) {
+        res.json({status: false}).end();
+    } 
+})
+
+const dbURI = "mongodb+srv://hackytech:mydocuments@cluster0.sl8ip.mongodb.net/users?retryWrites=true&w=majority"
+mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true})
+.then(result => app.listen(5000, () => {
+    console.log('Listening on port 5000');
+}))
+.catch(err => console.log(err));
+
+// app.listen(process.env.PORT, () => {
+//     console.log(`Listening on port ${process.env.PORT}`)
+// })
